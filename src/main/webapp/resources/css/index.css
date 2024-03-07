@@ -1,0 +1,22 @@
+@charset "UTF-8";
+
+#wrap{
+	width: 500px;
+	height: 200px;
+	margin: 0 auto;
+	padding-top: 100px;
+}
+
+h2{
+	color: red;
+	text-align: center;
+}
+
+#container{
+	text-align: center;
+}
+
+button{
+	width: 100px;
+	height: 30px;
+}

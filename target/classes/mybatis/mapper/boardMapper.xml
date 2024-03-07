@@ -45,5 +45,9 @@
         <!-- 시작 위치와 개수 제한으로 페이징된 게시글 조회 -->
         select * from board_table order by id desc limit #{start}, #{limit}
     </select>
+    
+    <select id="boardCount" resultType="Integer">
+    	select count(id) from board_table
+    </select>
         
 </mapper>

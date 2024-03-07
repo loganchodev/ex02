@@ -50,5 +50,9 @@ public class BoardRepository {
         // 페이지에 따른 게시글 목록 조회 기능
         return sql.selectList("Board.pagingList", pagingParams); // 'Board.pagingList' 쿼리 실행, 페이징 처리된 게시글 목록 반환
     } 
+    
+    public int boardCount() {
+    	return sql.selectOne("Board.boardCount");
+    }
 
 } // 클래스 종료

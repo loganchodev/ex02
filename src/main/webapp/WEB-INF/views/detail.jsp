@@ -1,10 +1,11 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!-- JSP 페이지 기본 설정: 응답 컨텐츠 타입과 문자 인코딩, 사용 언어 지정 -->
-
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
 <head>
     <title>detail.jsp</title>
     <!-- 페이지 타이틀 설정 -->
+    <link rel="stylesheet" href="<c:url value='/resources/css/detail.css'/>" />
 </head>
 <body>
 <table>
@@ -57,7 +58,8 @@
     // 페이지 내 스크립트 정의
     const listFn = () => {
         // 목록 버튼 클릭 시 실행되는 함수, 게시판 목록 페이지로 이동
-        location.href = "/board/";
+        const page = '${page}';
+        location.href = "/board/paging?page=" + page;
     }
     const updateFn = () => {
         // 수정 버튼 클릭 시 실행되는 함수, 현재 게시글의 수정 페이지로 이동

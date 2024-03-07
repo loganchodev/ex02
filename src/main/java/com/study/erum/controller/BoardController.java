@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import com.study.erum.dto.BoardDTO;
+import com.study.erum.dto.PageDTO;
 import com.study.erum.service.BoardService;
 import lombok.RequiredArgsConstructor;
 
@@ -35,7 +36,7 @@ public class BoardController {
 
         if (saveResult > 0) {
             // 저장 성공 시
-            return "redirect:/board/"; // 게시글 목록 페이지로 리다이렉션
+            return "redirect:/board/paging"; // 게시글 페이징 페이지로 리다이렉션
         } else {
             // 저장 실패 시
             return "save"; // 게시글 작성 폼 페이지로 이동
@@ -50,15 +51,19 @@ public class BoardController {
         return "list"; // 게시글 목록을 보여주는 view 반환
     }
     
-    @GetMapping
-    // 게시글 상세 조회 요청 처리
-    public String findById(@RequestParam("id") Long id, Model model) {
-        boardService.updateHits(id);
-        BoardDTO boardDTO = boardService.findById(id);
-        model.addAttribute("board", boardDTO);
-        return "detail"; // 게시글 상세 정보를 보여주는 view 반환
-    }
-    
+	@GetMapping
+	// 기본 경로(/board)에 대한 GET 요청을 처리하는 메서드
+	public String findById(@RequestParam("id") Long id,
+	                       @RequestParam(value = "page", required = false, defaultValue = "1") int page,
+	                       Model model) {
+	    // 'id'와 'page' 파라미터를 받아옴. 'page'는 선택적이며 기본값은 1
+	    boardService.updateHits(id); // 해당 게시글의 조회수를 업데이트
+	    BoardDTO boardDTO = boardService.findById(id); // 주어진 'id'로 게시글 상세 정보 조회
+	    model.addAttribute("board", boardDTO); // 조회된 게시글 정보를 모델에 추가
+	    model.addAttribute("page", page); // 현재 페이지 번호를 모델에 추가
+	    return "detail"; // 게시글 상세 정보를 보여주는 뷰로 이동
+	}
+   
     @GetMapping("/delete")
     // '/delete' 경로에 대한 GET 요청을 처리하는 메서드를 정의합니다. 이 경로는 게시글 삭제 요청을 처리.
     public String delete(@RequestParam("id") Long id) {
@@ -99,18 +104,18 @@ public class BoardController {
     // /board/paging?page=2
     // 처음 페이지 요청은 1페이지를 보여줌
     @GetMapping("/paging")
-	// '/paging' 경로에 대한 GET 요청을 처리하는 메서드임. 페이지네이션을 위한 경로 설정
+    // '/paging' 경로의 GET 요청을 처리. 페이지네이션을 구현한 페이지로 이동시킴
 	public String paging(Model model, 
 	                     @RequestParam(value = "page", required = false, defaultValue = "1") 
-	                     int page) {
-	// 요청에서 'page' 파라미터를 받아옴. 파라미터가 없으면 기본값으로 1을 사용
-	// 'page' 파라미터는 조회하고자 하는 페이지 번호를 나타냄
-	     System.out.println("page = " + page);
-	     // 서버 콘솔에 현재 페이지 번호 출력. 디버깅 용도로 사용됨
-	     // 해당 페이지에서 보여줄 글 목록
-	     List<BoardDTO> pagingList = boardService.pageList(page);
-	     System.out.println("pageList =" + pagingList);
-	     return "index";
-	     // 'index' 뷰를 반환. 실제 페이지네이션 로직은 여기서 구현하고, 그 결과를 'index' 페이지에 전달할 예정
+	                  	 int page) {
+		// 요청에서 'page' 파라미터 받음. 없으면 기본값 1 사용. 페이지 번호 나타냄
+		System.out.println("page = " + page); // 현재 페이지 번호 서버 콘솔에 출력. 디버깅용
+		List<BoardDTO> pagingList = boardService.pagingList(page); // 해당 페이지의 게시글 목록 조회
+		System.out.println("pageList =" + pagingList); // 조회된 페이지 리스트 콘솔에 출력. 디버깅용
+		PageDTO pageDTO = boardService.pagingParam(page); // 페이징 처리를 위한 파라미터 설정
+		model.addAttribute("boardList", pagingList); // 조회된 게시글 목록 모델에 추가
+		model.addAttribute("paging", pageDTO); // 페이지네이션 정보 모델에 추가
+		return "paging"; // 페이지네이션 처리된 페이지로 이동. 실제 로직 결과 'paging' 뷰에 전달
 	}
-}
+       
+} // 클래스 종료
