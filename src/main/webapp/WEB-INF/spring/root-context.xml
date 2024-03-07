@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+	   xmlns:tx="http://www.springframework.org/schema/tx"
+	 xsi:schemaLocation="http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
+	<!-- 스프링 JDBC, 빈즈, 트랜잭션 관리 설정을 위한 XML 네임스페이스 및 스키마 위치 선언 -->
+
+	<!-- 데이터베이스 연결 설정 -->
+	<bean id="dataSource"
+		  class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName" value="com.mysql.jdbc.Driver"/>
+		<property name="url" value="jdbc:mysql://localhost:3306/webdb" />
+		<property name="username" value="kncho83"/>
+		<property name="password" value="1234"/>
+	</bean>
+	<!-- 데이터베이스 드라이버, URL, 사용자 이름 및 비밀번호를 설정하여 데이터 소스를 정의 -->
+
+	<!-- MyBatis SQL 세션 팩토리 설정 -->
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource"/>
+		<property name="configLocation" value ="classpath:/mybatis/mybatis-config.xml" />
+		<property name="mapperLocations" value="classpath:/mybatis/mapper/*.xml" />
+	</bean>
+	<!-- 데이터 소스 참조, MyBatis 설정 파일 및 매퍼 파일 위치 설정 -->
+
+	<!-- MyBatis SQL 세션 템플릿 설정 -->
+	<bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate">
+		<constructor-arg name="sqlSessionFactory" ref="sqlSessionFactory" />
+	</bean>
+	<!-- SQL 세션 팩토리를 사용하여 SQL 세션 템플릿을 생성 -->
+
+	<!-- 트랜잭션 매니저 설정 -->
+	<bean id="transactionManager"
+		  class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+	<!-- 데이터 소스를 사용하여 데이터베이스 트랜잭션을 관리하는 트랜잭션 매니저 정의 -->
+
+	<!-- 애노테이션 기반 트랜잭션 관리 활성화 -->
+	<tx:annotation-driven transaction-manager="transactionManager"/>
+	<!-- @Transactional 애노테이션을 사용하여 선언적 트랜잭션 관리를 활성화 -->
+	
+</beans>
