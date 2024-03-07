@@ -95,6 +95,22 @@ public class BoardController {
 	    // 업데이트된 게시글의 상세 정보 페이지를 보여주는 뷰 이름을 반환함
 	    // return "redirect:/board?id="+boardDTO.getId(); // 이 코드는 조회수 증가를 위해 리다이렉트하는 방법을 보여줌
 	}
-
-
+    
+    // /board/paging?page=2
+    // 처음 페이지 요청은 1페이지를 보여줌
+    @GetMapping("/paging")
+	// '/paging' 경로에 대한 GET 요청을 처리하는 메서드임. 페이지네이션을 위한 경로 설정
+	public String paging(Model model, 
+	                     @RequestParam(value = "page", required = false, defaultValue = "1") 
+	                     int page) {
+	// 요청에서 'page' 파라미터를 받아옴. 파라미터가 없으면 기본값으로 1을 사용
+	// 'page' 파라미터는 조회하고자 하는 페이지 번호를 나타냄
+	     System.out.println("page = " + page);
+	     // 서버 콘솔에 현재 페이지 번호 출력. 디버깅 용도로 사용됨
+	     // 해당 페이지에서 보여줄 글 목록
+	     List<BoardDTO> pagingList = boardService.pageList(page);
+	     System.out.println("pageList =" + pagingList);
+	     return "index";
+	     // 'index' 뷰를 반환. 실제 페이지네이션 로직은 여기서 구현하고, 그 결과를 'index' 페이지에 전달할 예정
+	}
 }

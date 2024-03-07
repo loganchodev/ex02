@@ -10,11 +10,8 @@ import java.sql.Timestamp;
 // java.sql 패키지의 Timestamp 클래스를 임포트. SQL TIMESTAMP 데이터 타입과 호환되는 시간값을 표현
 
 @Getter
-// 모든 필드에 대한 getter 메서드를 자동으로 생성하는 Lombok 어노테이션
 @Setter
-// 모든 필드에 대한 setter 메서드를 자동으로 생성하는 Lombok 어노테이션
 @ToString
-// 클래스의 toString 메서드를 자동으로 생성하는 Lombok 어노테이션. 클래스의 정보를 문자열로 쉽게 출력할 수 있게 해줌
 
 public class BoardDTO {
     // BoardDTO 클래스 시작
